@@ -1,0 +1,21 @@
+<html>
+<!doctype html>
+<head><title>Canvas</title></head>
+<body>
+  <canvas id="myCanvas" width="578" height="200"></canvas>
+  <script>
+    var canvas = document.getElementById('myCanvas');
+    var context = canvas.getContext('2d');
+
+        // round line cap (middle line)
+      context.beginPath();
+      context.moveTo(200, canvas.height / 2);
+      context.lineTo(canvas.width - 200, canvas.height / 2);
+      context.lineWidth = 20;
+      context.strokeStyle = '#0000ff';
+      context.lineCap = 'round';
+      context.stroke();
+  </script>
+</body>
+
+</html>
