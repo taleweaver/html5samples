@@ -1,0 +1,70 @@
+<!DOCTYPE html> 
+<html>  
+  <head>
+    <title>Save My Name</title>
+    <script src="http://www.google.com/jsapi"></script>
+    <script>
+      google.load("jquery", "1.4.1");
+    </script>
+    <script>
+      var db = window.openDatabase("InfoDB", "1.0", "My Info", 1024*1000);
+
+      function insertData(fname) {
+       db.transaction(function(tx) {
+          tx.executeSql('INSERT INTO Info (fname) VALUES (?)',[fname]);
+       });
+      }
+
+      function renderResults(tx, rs) {
+        e = $('#previous_info');
+        e.html("");
+        for(var i=0; i < rs.rows.length; i++) {
+          r = rs.rows.item(i);
+          e.html(e.html() + 'id: ' + r['id'] + ', name: ' + r['fname'] + '<br />');
+        }
+      }
+
+
+      function renderData() {
+        db.transaction(function(tx) {
+                     tx.executeSql('SELECT * FROM Info', [], renderResults);
+        });
+      }
+
+
+      $(document).ready(function() {
+        db.transaction(function(tx){
+          tx.executeSql('CREATE TABLE IF NOT EXISTS Info(id INTEGER PRIMARY KEY, fname TEXT)', []);
+		});
+
+        $('#dataform').submit(function() {
+            insertData($('#fname').val());
+            renderData();
+            return false;
+        });
+
+
+        renderData();
+      });
+    </script>
+  </head>
+  <body>
+    <form method="get" id="dataform">
+      <div>
+        <label for="fname">Name</label>
+        <input type="text" placeholder="Enter Name" id="fname"
+name="fname" required=required />
+      </div>
+      <div>
+        <input type="submit" value="Submit Data" />
+      </div>
+    </form>
+    <div>
+      <h2>Stored Data</h2>
+
+    </div>
+    <div id="previous_info">
+
+    </div>
+  </body>
+</html> 
